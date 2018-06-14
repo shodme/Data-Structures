@@ -1,0 +1,55 @@
+
+// 堆栈的线性存储结构一般由一个一维数组和一个记录栈顶元素位置的变量组成（最底部作为栈顶，也就是数组最后一个位置）
+
+typedef int Position;
+struct SNode{
+	ElementType *Data;
+	Position Top;
+	int MaxSize;
+	
+}
+
+typedef struct SNode *Stack;
+Stack CreateStack(int MaxSize)
+{
+	Stack S = (Stack)malloc(sizeof(struct SNode));
+	S->Data = (ElementType *)malloc(MaxSize * sizeof(ElementType));
+	S->Top = -1;
+	S->MaxSize = MaxSize;
+	return S;
+}
+
+bool IsFull(Stack S)
+{
+	return (S->Top==S->MaxSize-1)
+	
+}
+
+bool Push(Stack S,ElementType X)
+{
+	if(IsFull(S)){
+		printf("堆栈满了")；
+		return false;
+	}
+	else
+	{
+		S->Data[++(S->Top)] = X;
+		return ture;
+	}
+}
+
+bool IsEmpty(Stack S)
+{
+	return (S->Top == -1);
+	
+}
+
+ElementType Pop(Stack S)
+{
+	if(IsEmpty(S)){
+		printf("堆栈空了");
+		return Error;
+	}
+	else
+		return(S->Data[(S->Top)--]);
+}

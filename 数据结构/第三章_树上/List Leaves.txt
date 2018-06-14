@@ -1,0 +1,227 @@
+/*
+思路：
+1、存成二叉树
+2、找出根节点
+3、利用队列进行层序遍历
+
+*/
+
+#include <iostream>
+#include <queue>  
+using namespace std;
+
+#define MaxSize 10
+#define Tree int
+#define NUL -1
+
+struct TreeNode{
+	
+	Tree left;
+	Tree right;	
+	Tree index;
+}T[MaxSize];
+
+struct QNode{
+	
+	int rear,front;
+	int QueueData[Maxsize];
+	
+};
+typedef struct QNode* Queue;
+
+
+
+int BuildTree(struct TreeBode T[]);
+void LevelTraversal(struct TreeBode T[],int root);
+Queue CreateQueue();
+bool IsEmpty(Queue Q);
+void AddQ(int node,Queue Q);
+int DeleteQ(Queue Q);
+
+int main()
+{
+	TreeNode T;
+	int Root;
+	Root = BuildTree(T);
+	LevelTraversal(T,Root);
+	return 0;
+}
+Queue CreateQueue()
+{
+	Queue Q;
+	Q = (Queue)malloc(sizeof(struct QNode));
+	Q->rear = 0;
+	Q->front = 0;
+	return Q;
+	
+}
+bool IsEmpty(Queue Q)
+{
+	if(Q->rear == Q->front)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+	
+}
+
+void AddQ(int node,Queue Q)
+{
+	// 判断队列是否已满
+	if((Q->rear+1)%Maxsize==Q->front))
+	{
+        cout << "queue full" << endl;
+        return;
+	}
+	Q->rear = (Q->rear+1) % Maxsize;
+	Q->QueueData[Q->front] = node;
+	
+}
+
+int DeleteQ(Queue Q)
+{
+	if(Q->rear = Q-> front)
+	{
+		cout << "queue empty" << endl;
+        return;
+	}
+	else
+	{
+		Q->front = (Q->front + 1) % MaxSize;
+		return Q->QueueData[Q->front];
+		
+	}
+
+	
+}
+
+Tree BuildTree(struct TreeBode T[])
+{
+	int num;
+	char cr,cl,ind;
+	int root = NUL;
+	int check[MaxSize];
+	cout<<"输入节点数"<<endl;
+	cin>>num;
+	
+	if(num)
+	{
+		for(int i=0;i<num;i++)
+		{
+			check[i] = 0;		
+		}
+		for(i=0;i<num;i++)
+		{
+			scanf("%c%c%c\n",&ind,&cl,&cr);
+			T[i].index = ind - '0';
+			if(cl!='-')
+			{
+				T[i].left = cl - '0';
+				check[T[i].left] = 1;
+			}
+			else
+			{
+				T[i].left = '-':
+			}
+			if(cr!='-')
+			{
+				T[i].right = cr - '0';
+				check[T[i].right] = 1;
+			}
+			else
+			{
+				T[i].right = '-':
+			}
+		}
+		
+	}
+	
+	for(i=0;i<num;i++)
+	{
+		if(check[i]!=1)
+		{
+			root = i;
+			break;
+		}
+		
+	}
+	
+	return root;
+	
+}
+
+/*
+// 使用系统<queue>函数 C++
+void LevelTraversal(struct TreeBode T[],int root)
+{
+	queue<QNode> q;
+	q.push(T[root]);
+	
+	
+	while(!q.empty())
+	{
+		QNode temp = q.front();
+		q.pop();
+		if(temp.left!='-')
+		{
+			q.push(T[temp.left]);			
+		}
+		if(temp.right!='-')
+		{
+			q.push(T[temp.right]);			
+		}
+		if(temp.left=='-'&&temp.righ=='-')
+		{
+			cout<<q.index;
+		}
+		
+	}
+	cout<<endl;
+	return 0;
+}
+
+*/
+
+// 自己写队列函数
+void LevelTraversal(struct TreeBode T[],int root)
+{
+	Queue Q;
+	int node;
+	if(root==-1)
+		return;
+	Q = CreateQueue();
+	
+	AddQ(Q,Root);
+	
+	
+	while(!IsEmpty(Q))
+	{
+		node = Delete(Q);
+		int flag = 0;
+		
+		if(T[node]->left=='-'&&T[node]->right=='-')
+		{
+			if(flag==0)
+			{
+				cout<<node;
+				flag = 1;
+			}
+			else
+			{
+				cout<<" "<<node;
+			}
+		}
+					
+		if(T[node]->left)
+			AddQ(Q,T[node]->letf);
+		if(T[node]->right)
+			AddQ(Q,T[node]->Right);
+		
+	}
+	cout<<endl;
+	return;
+	
+}

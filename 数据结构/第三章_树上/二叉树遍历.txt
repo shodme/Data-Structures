@@ -1,0 +1,117 @@
+// 非递归先序遍历
+void InOrderTraversal(BinTree BT)
+{
+	BinTree T BT;
+	Stack S = CreateStack(MaxSize);
+	
+	while(T||IsEmpty(S))
+	{
+		while(T)
+		{
+			printf("%5d",T->Data);
+			Push(S,T);
+			T = T->Left;
+		}
+		if(!IsEmpty(S))
+		{			
+			T = Pop(S);
+			T = T->Right;
+		}
+	}
+}
+
+
+
+// 非递归中序遍历
+void InOrderTraversal(BinTree BT)
+{
+	BinTree T BT;
+	Stack S = CreateStack(MaxSize);
+	
+
+	while(T||IsEmpty(S))
+	{
+		while(T)
+		{
+
+			Push(S,T);
+			T = T->Left;
+		}
+		if(!IsEmpty(S))
+		{	
+	
+			T = Pop(S);
+			printf("%5d",T->Data);
+			T = T->Right;
+		}
+	}
+}
+printf("%5d",T->Data);
+
+// 非递归后序遍历
+// 需要改变链表结构，在节点中加一个标志位，第三次访问时，输出
+
+
+// 递归中序遍历
+void InorderTraversal(BinTree BT)
+{
+	if(BT)
+	{//此处假设对BT结点的访问就是打印数据
+		InorderTraversal(BT->left);
+		printf("%d",BT->Data);
+		InOrderTraversal(BT->right);
+	}
+	
+}
+
+// 递归先序遍历
+void PreorderTraversal(BinTree BT)
+{
+	if(BT)
+	{
+		printf("%d",BT->Data);
+		PreorderTraversal(BT->left);
+		PreorderTraversal(BT->right);
+		
+	}
+	
+}
+
+// 递归后序遍历
+void PostorderTraversal(BinTree BT)
+{
+	if(BT)
+	{
+		PreorderTraversal(BT->left);
+		PreorderTraversal(BT->right);
+		printf("%d",BT->Data);
+		
+	}
+	
+}
+
+
+
+// 递归层序遍历
+
+
+void LevelOrderTraversal(BT)
+{
+	Queue Q;
+	BinTree T;
+	if(!BT)
+		return;
+	Q = CreateQueue();
+	AddQ(Q,BT);
+	
+	while(!IsEmpty(Q))
+	{
+		T = Delete(Q);
+		printf("%d",T->Data);
+		if(T->left)
+			AddQ(Q,T->letf);
+		if(T->right)
+			AddQ(Q,T->Right);
+		
+	}
+}

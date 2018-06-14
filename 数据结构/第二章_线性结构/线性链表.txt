@@ -1,0 +1,66 @@
+typedef struct LNode *PtrToLNode
+struct LNode{
+	ElementType Data;
+	PtrToLNode Next;	
+}
+typedef PtrToLNode Position;
+typedef PtrToLNode List;
+
+// 查找
+#define ERROR NULL
+
+Position Find(List L,ElementType X)
+{
+	Position p = L;
+	while(p&&p->Data!=X)
+	{
+		p->p->Next;
+		
+	}
+	if(p)
+		return p;
+	else
+		return ERROR;
+}
+// 带头结点的插入
+bool Insert(List L,ElementType x,Position P)
+{   //这里默认L有头结点
+	Position tmp,pre;
+	// 查找P前一个节点
+	for(pre=L;pre&&pre->Next!=P;pre-pre->Next);
+	if(pre==NULL)
+	{
+		cout<<"插入位置错误"<<endl;
+		return false;
+	}
+	else // 找到了P前一个节点pre
+	{ //在p前面插入新节点
+		tmp = (Position)malloc(sizeof(struct LNode));
+		tmp->Data = X;
+		tmp->Next = P;
+		pre->Next = tmp;
+		return true;
+	}
+	
+}
+
+// 带头结点的删除
+bool Delete(List L,Position P)
+{ /* 这里默认L有头结点 */
+	Position pre;
+	for(pre=L;pre&&pre->Next!=P;pre=pre->Next);
+	if(pre=NULL||P=NULL)
+	{
+		cout<<"删除位置错误"<<endl;
+		return false;		
+	}
+	else
+	{
+		pre->Next = P->Next;
+		free(P);
+		return true;	
+	}
+	
+}
+
+

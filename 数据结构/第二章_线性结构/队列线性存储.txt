@@ -1,0 +1,62 @@
+// 队列的顺序存储结构有一个一维数组和一个记录队头位置的变量front和记录队列尾位置的元素变量rear组成
+// 加一取余循环利用	
+// front总是指向队列第一个元素之前的一个元素
+typedef int Position
+#define Error -1
+struct QNode{
+	ElementType *Data;    //存储元素的数组
+	Position Front,Rear;  // 队列的头尾指针
+	int MaxSize;          // 队列最大容量
+};
+typedef struct QNode *Queue;
+
+Queue CreateQueue(int MaxSize)
+{
+	Queue Q = (Queue)malloc(sizeof(struct QNode));
+	Q->Data = (ElementType *)malloc(MaxSize * sizeof(ElementType));
+	Q->Front = Q->Rear = 0;
+	Q->MaxSize = MaxSize;
+	return Q;
+	
+}
+
+bool IsFull(Queue Q)
+{
+	return ((Q->Rear+1)%Q->MaxSize==Q->Front);
+}
+
+bool ADDQ(Queue Q,ElementType X)
+{
+	if(IsFull(Q))
+	{
+		printf("队列满");
+		return false;
+	}
+	else
+	{
+		Q->Rear = (Q->Rear+1)%Q->MaxSize;
+		Q->Data[Q->Rear] = X;
+		return true;		
+	}
+}
+
+
+bool IsEmpty(Queue Q)
+{
+	return (Q->Front==Q->Rear);
+	
+}
+
+ElementType DeleteQ(Queue Q)
+{
+	if(IsEmpty(Q))
+	{
+		printf("队列空");
+		return Error;
+	}
+	else
+	{
+		Q->Front = (Q->Front+1)%Q->MaxSize;
+		return Q->Data[Q->Front];
+	}
+}

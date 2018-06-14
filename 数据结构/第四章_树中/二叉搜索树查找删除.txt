@@ -1,0 +1,144 @@
+// 尾递归可以用循环实现
+Position Find(ElementType X,BinTree BST)
+{
+	if(!BST)
+		return NULL;
+	if(X>BST->Data)
+		return Find(X,BST->Right);
+	else if(X<BST->Data)
+		return Find(X,BST->Left);
+	else 
+		return BST;
+	
+}
+
+Position IterFind(ElementType X,BinTree BST)
+{
+	while(BST)
+	{
+		if(X>BST->Data)
+			BST=BST->Right;
+		else if(X<BST->Left)
+			BST=BST->Left;
+		else
+			return BST;
+		
+	}
+	return NULL;
+}
+
+Position FindMin(BinTree BST)
+{
+	if(!BST)
+		return NULL;
+	else if(!BST->Left)
+		BST= BST->Left;
+	else
+		return FindMin(BST->Left);
+		
+}
+
+
+Position FindMin(BinTree BST)
+{
+	if(BST)
+	{
+		while(BST->Left)
+		{
+			BST = BST->Left;
+				
+		}
+		return BST;
+	}
+	return NULL;
+		
+}
+
+Position FindMax(BinTree BST)
+{
+	if(!BST)
+		return NULL;
+	else if(!BST->Right)
+		BST= BST->Right;
+	else
+		return FindMin(BST->Right);
+		
+}
+
+
+Position FindMax(BinTree BST)
+{
+	if(BST)
+	{
+		while(BST->Right)
+		{
+			BST = BST->Right;
+				
+		}
+		return BST;
+	}
+	return NULL;
+		
+}
+
+BinTree Insert(BinTree BST,ElementType X)
+{
+	if(!BST) // 若原树为空，生成并返回一个节点的二叉搜索树	
+	{
+		BST = (BinTree)malloc(sizeof(struct TNode));
+		BST->Data = X;
+		BST->Left = BST->Right = NULL;
+	}
+	else
+	{	// 开始找要插入元素位置
+		if(X < BST->Data)
+		{
+			BST->Left = Insert(BSF->Left,X);	
+		}
+		else if(X > BST->Data)
+		{
+			BST->Right = Insert(BSF->Right,X);
+		}
+	}
+	return BST;
+}
+
+BinTree Delete(BinTree BST,ElementType X)
+{
+	Position Tmp;
+	if(!BST)
+		printf("要删除的元素未找到");
+	else
+	{
+		if(X<BST->Data)
+		{
+			BST->Left = Delete(Bst->Left,X);
+		}
+		else if( X > BST->Data ) 
+		{
+			BST->Right = Delete( BST->Right, X );			
+		}
+        else // 找到要删除的节点
+		{ /* 如果被删除结点有左右两个子结点 */ 
+            if( BST->Left && BST->Right ) 
+			{
+                /* 从右子树中找最小的元素填充删除结点 */
+                Tmp = FindMin( BST->Right );
+                BST->Data = Tmp->Data;
+                /* 从右子树中删除最小元素 */
+                BST->Right = Delete( BST->Right, BST->Data );
+			}
+			else
+			{
+				Tmp = BST; 
+                if( !BST->Left )       /* 只有右孩子或无子结点 */
+                    BST = BST->Right; 
+                else                   /* 只有左孩子 */
+                    BST = BST->Left;
+                free( Tmp );
+			}
+		}
+		
+	}
+	
+}

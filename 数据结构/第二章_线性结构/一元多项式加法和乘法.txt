@@ -1,0 +1,252 @@
+/*
+题目要点：
+1、加法中：注意多项式系数之和为0时，该项链表消除；输入为空指针时；一个多项式读完后，
+		   需要将另一个多项式接在后面
+2、乘法中：先计算出第一列链表(T1的第一项乘以整个T2)，后面不断往链表里面插入；输入为空指针时；
+           系数和为0时，需要消除该项；两个多项式相乘，得到的第一列链表中第一项必然是最大的
+		   （因为题目中多项式按照指数非递减排列）
+		   
+
+*/
+
+#include <iostream>
+#include <stdio.h>
+using namespace std;
+// 构建节点
+typedef struct Node* PtrToNode;
+struct Node {
+	int Exp;
+	int Coe;
+	PtrToNode Next;
+};
+
+typedef PtrToNode List;
+
+
+List Read(); // 读入函数
+void Print(List L);// 读出函数
+List Mul(List L1, List L2); // 多项式乘
+List Add(List L1, List L2); // 多项式加
+
+
+int main()
+{
+	List L1, L2, L_ADD, L_MUL;
+	L1 = Read();
+	L2 = Read();
+	L_ADD = Add(L1, L2);
+	L_MUL = Mul(L1, L2);
+	Print(L_MUL);
+    Print(L_ADD);
+
+	return 0;
+}
+
+
+
+// 多项式加法
+List Add(List L1, List L2)
+{
+
+
+	List H, Temp, T1, T2;
+	Temp = (List)malloc(sizeof(struct Node));
+	Temp->Next = NULL;
+	H = Temp;
+	T1 = L1->Next;
+	T2 = L2->Next;
+
+
+	while (T1&&T2)
+	{
+
+		List T3 = (List)malloc(sizeof(struct Node));
+		T3->Next = NULL;
+
+
+		if (T1->Exp>T2->Exp)
+		{
+			T3->Coe = T1->Coe;
+			T3->Exp = T1->Exp;
+			Temp->Next = T3;
+			Temp = T3;
+			T1 = T1->Next;
+		}
+		else if (T1->Exp<T2->Exp)
+		{
+			T3->Coe = T2->Coe;
+			T3->Exp = T2->Exp;
+			Temp->Next = T3;
+			Temp = T3;
+			T2 = T2->Next;
+		}
+		else if (T1->Exp == T2->Exp)
+		{
+			if ((T1->Coe + T2->Coe) == 0)
+			{
+				T1 = T1->Next;
+				T2 = T2->Next;
+
+			}
+			else
+			{
+
+				T3->Exp = T1->Exp;
+				T3->Coe = T1->Coe + T2->Coe;
+				Temp->Next = T3;
+				Temp = T3;
+				T1 = T1->Next;
+				T2 = T2->Next;
+
+			}
+		}
+	}
+
+	if (T1 == NULL)
+	{
+		Temp->Next = T2;
+
+	}
+	else if (T2 == NULL)
+	{
+		Temp->Next = T1;
+	}
+	return H;
+
+}
+// 多项式乘法
+List Mul(List L1, List L2)
+{
+
+
+	List H, Temp, T1, T2;
+	H = (List)malloc(sizeof(struct Node));
+	H->Next = NULL;
+	Temp = H; 
+	T1 = L1->Next; 
+	T2 = L2->Next;
+
+	if (L1->Next == NULL || L2->Next == NULL)
+	{
+		return H;
+	}
+
+	// 先建立第一行链表，后面网里插入
+	while (T2)
+	{
+		List T3 = (List)malloc(sizeof(struct Node));
+		T3->Exp = T1->Exp + T2->Exp;
+		T3->Coe = T1->Coe * T2->Coe;
+		T3->Next = NULL;
+		Temp->Next = T3;
+		T2 = T2->Next;
+		Temp = Temp->Next;
+	}
+
+	T1 = T1->Next;
+	while (T1)
+	{
+		List Temp1 = H;
+		T2 = L2->Next;
+		while (T2)
+		{
+			List T3 = (List)malloc(sizeof(struct Node));
+			T3->Exp = T1->Exp + T2->Exp;
+			T3->Coe = T1->Coe * T2->Coe;
+			T3->Next = NULL;
+			int flag = 0;
+			// 如果T3的系数一直大于Temp1，一直往后找，直到找到系数小于等于T3的Temp1
+			while (Temp1->Next&&Temp1->Next->Exp>T3->Exp)
+			{
+				Temp1 = Temp1->Next;
+				flag++;
+			}
+
+
+			// 如果相等，则将T3加入Temp1,；如果小于Temp1，则T3放到Temp1后面
+			if (Temp1->Next&&Temp1->Next->Exp == T3->Exp)
+			{   // 如果和不为0，则赋值；如果和为0，则删除
+				if (Temp1->Next->Coe + T3->Coe)
+				{
+					Temp1->Next->Coe = Temp1->Next->Coe + T3->Coe;
+				}
+				else
+				{
+					T3 = Temp1->Next;
+					Temp1->Next = T3->Next;
+					free(T3);
+				}
+			}
+			else
+			{
+				T3->Next = Temp1->Next;
+				Temp1->Next = T3;
+				Temp1 = Temp1->Next;
+			}
+			T2 = T2->Next;
+		}
+		T1 = T1->Next;
+	}
+	return H;
+}
+
+
+
+
+
+
+// 读入链表
+List Read()
+{
+	List H, Temp;// 头结点
+	H = (List)malloc(sizeof(struct Node));
+	H->Next = NULL;
+	int len = 0;
+	int e = 0;
+	int c = 0;
+	scanf("%d", &len);
+	if (!len)
+	{
+		//cout << "链表只有头节点" << endl;
+		return H;
+	}
+	Temp = H;
+
+	while (len)
+	{
+		scanf("%d%d", &c, &e);
+		List Node = (List)malloc(sizeof(struct Node));
+		Node->Coe = c;
+		Node->Exp = e;
+		Node->Next = NULL;
+		Temp->Next = Node;
+		Temp = Node;
+		len--;
+	}
+	return H;
+}
+
+
+
+
+// 显示结果
+void Print(List L)
+{
+	int flag = 0;
+	if (L->Next == NULL)
+	{
+		cout << "0 0" << endl;
+		return;
+	}
+	L = L->Next;
+	while (L)
+	{
+		if (!flag)
+			flag = 1;
+		else
+			cout << " ";
+		cout << L->Coe << " " << L->Exp ;
+		L = L->Next;
+	}
+	cout << endl;
+}

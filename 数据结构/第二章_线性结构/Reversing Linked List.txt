@@ -1,0 +1,173 @@
+#include <iostream>
+using namespace std;
+
+typedef struct Node* PtrToNode;
+
+struct Node {
+	int Address;
+	int Data;
+	int Tail;
+	PtrToNode Next;
+};
+
+typedef PtrToNode List;
+
+List Read(int *address, int *N, int *K);
+List Inverse(List L,int address,int N,int K);
+List Arrange(List L,int address);
+void Print(List L,int N);
+
+
+int main()
+{
+	List L, L1,L_inv;
+
+	int *N = (int*)malloc(sizeof(int));
+	int *K = (int*)malloc(sizeof(int));
+	int *address = (int*)malloc(sizeof(int));
+	L = Read(address, N, K);
+
+
+	L1 = Arrange(L,*address);
+	L_inv = Inverse(L1,*address,*N,*K);
+	Print(L_inv,*N);
+//	cout << *address << *N << *K << endl;
+
+	return 0;
+
+}
+
+List Read(int *address, int *N, int *K)
+{
+
+	//int address;
+	//int N, K;
+	// 读入链表参数
+	cout << "输入第一行信息："<<endl;
+	scanf("%d%d%d", address, N, K);
+	int len = *N;
+	List L,H;
+	L = (List)malloc(sizeof(struct Node));
+	L->Next = NULL;
+	H = L;
+	// 如果N为0，返回空头结点
+	if (!len)
+	{
+		return H;
+	}
+	// 读入每个节点信息
+	while (len)
+	{
+		int address,next;
+		int num;
+		List Temp = (List)malloc(sizeof(struct Node));
+		Temp->Next = NULL;
+		cout << "输入节点信息：" << endl;
+		scanf("%d%d%d", &Temp->Address, &Temp->Data, &Temp->Tail);
+		L->Next = Temp;
+		L = L->Next;
+		len--;
+	}
+
+
+
+	return H;
+}
+
+List Arrange(List L, int address)
+{
+	if (L->Next == NULL)
+	{
+		return L;
+	}
+	int next_addr = 0;
+	List H,Temp,H1;
+	H = (List)malloc(sizeof(struct Node));
+	H->Next = NULL;
+	H1 = H;
+	Temp = L;
+
+	// 找到头结点
+	while (Temp->Next)
+	{
+		if (Temp->Next->Address == address)
+		{
+			next_addr = Temp->Next->Tail;
+			H1->Next = Temp->Next;
+			Temp->Next = Temp->Next->Next;
+			H1->Next->Next = NULL;
+			//找到头结点退出循环
+			break;
+		}
+		Temp = Temp->Next;
+	}
+	H1 = H1->Next;
+	// 找每个节点排序
+	while (next_addr!=-1)
+	{
+		Temp = L;
+		while (Temp->Next)
+		{
+			if (Temp->Next->Address == next_addr)
+			{
+				next_addr = Temp->Next->Tail;
+				H1->Next = Temp->Next;
+				Temp->Next = Temp->Next->Next;
+				H1->Next->Next = NULL;
+				break;
+			}
+			Temp = Temp->Next;
+		}
+		H1 = H1->Next;
+	}
+
+	return H;
+}
+
+List Inverse(List L, int address, int N, int K)
+{
+	if (L->Next == NULL)
+	{
+		return L;
+	}
+	List H,Temp,H1;
+	H = (List)malloc(sizeof(struct Node));
+	H->Next = NULL;
+	H1 = H;
+	K = K - 1;
+	int len = K;
+	while (K != -1)
+	{
+		Temp = L;
+		while (len!=0)
+		{
+			Temp = Temp->Next;		
+			len--;
+		}
+		H1->Next = Temp->Next;		
+		Temp->Next = Temp->Next->Next;
+		H1->Next->Next = NULL;
+		K--;
+		len = K;
+		H1 = H1->Next;
+	}
+	H1->Next = Temp->Next;
+
+	return H;
+}
+
+void Print(List L,int N)
+{
+
+	List L1 = L->Next;
+	
+	while (L1->Next)
+	{
+		printf("%05d %d %05d\n", L1->Address, L1->Data, L1->Tail);
+		L1 = L1->Next;
+	}
+
+
+	printf("%05d %d -1\n", L1->Address, L1->Data);
+
+}

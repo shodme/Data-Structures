@@ -1,0 +1,62 @@
+typedef Struct *PtrToSNode;
+struct SNode{
+	ElementType Data;
+	PtrToSNode Next;
+};
+
+typedef PtrToSNode Stack;
+
+Stack CreateStack()
+{// 创建一个堆栈头结点，返回该结点指针
+	Stack S;
+	S = (Stack)malloc(sizeof(struct SNode));
+	S->Next = NULL;
+	return S;
+}
+
+bool IsEmpty(Stack S)
+{
+	return (S->Next==NULL);
+}
+
+bool Push(Stack S,ElementType X)
+{
+	PtrToSNode TmpCell;
+	
+	TmpCell = (PtrToSNode)malloc(sizeof(struct SNode));
+	TmpCell->Data = X;
+	TmpCell->Next = S->Next;
+	S->Next = TmpCell;
+	return true;
+}
+
+ElementType Pop(Stack S)
+{//删除并返回堆栈S的栈顶元素
+	PtrToSNode FirstCell;
+	ElementType TopELem;
+	
+	if(IsEmpty(S))
+	{
+		printf("堆栈空");
+		return ERROR;
+	}
+	else
+	{
+		FirstCell = S->Next;
+		TopELem = FirstCell->Data;
+		S->Next = FirstCell->Next;
+		free(FirstCell);
+		return TopELem;
+		
+		
+	}
+}
+
+
+
+
+
+
+
+
+

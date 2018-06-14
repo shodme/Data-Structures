@@ -1,0 +1,77 @@
+/*
+思路：
+1、根据线序遍历对应入栈（Push）,中序遍历对应出站（Pop）,得到先序和中序数组
+2、递归后序遍历输出
+
+
+*/
+
+
+#include <iostream>
+#include <String>
+using namespace std;
+
+#define MAXSIZE 30
+
+
+
+
+void PostOrderTraversal(int preOrder[ ],int inOrder[ ],int length)
+{
+	
+	if(length==0)
+		return;
+	
+	int root = preOrder[0];
+	for(int rootIndex=0;rootIndex<length;rootIndex++)
+	{
+		if(inOrder[i]==root)
+			{
+				break;
+			}
+		
+	}
+	PostOrderTraversal(preOrder[0+1],inOrder[0],rootIndex);
+	PostOrderTraversal(preOrder[0+rootIndex+1],inOrder[0+rootIndex+1],length-rootIndex-1);
+	cout<<root<<" ";
+	
+	retrun ;
+	
+}
+
+int main()
+{
+	
+	int preOrder[MAXSIZE];
+	int inOrder[MAXSIZE];
+	int length,data;
+	string opt;
+	cout<<"输入节点个数"<<endl;
+	cin>>length;
+	int count1 = 0;
+	int count2 = 0;
+	// 得到先序遍历和中序遍历数组
+	for(int i=0;i<2*length;i++)
+	{
+		
+		cout<"输入节点信息"<<endl;
+		scanf("%s%d",&opt,&data)
+		if(opt=="Push")
+		{
+			preOrder[count1] = data;
+			count1++;
+		}
+		if(opt=="Pop")
+		{
+			inOrder[count2] = data;
+			count2++:
+			
+		}	
+	}
+	
+	// 递归进行后续变量
+	
+	PostOrderTraversal(*preOrder,*inOrder,length);
+	
+	return;
+}
