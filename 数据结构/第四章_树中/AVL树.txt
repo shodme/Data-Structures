@@ -1,0 +1,102 @@
+// 平衡搜索树插入
+
+typedef struct AVLNode *Position;
+typedef Position AVLTree;
+struct AVLNode{
+	ElementType Data;
+	AVLTree Left;
+	AVLTree Right;
+	int Height;
+};
+
+
+int Max(int a,int b)
+{
+	return a>b?a:b;
+}
+
+
+// 树的高度：左右子树最大高度+1（递归）
+// 右右插入-左旋
+AVLTree SingleLeftRotation(AVLTree A)
+{// 注意:A必须有一个左子节点B
+	AVLTree B = A->Left;
+	A->Left = B->Right;
+	B->Right = A;
+	A->Height = Max(GetHeight(A->Left),GetHeight(A->Right))+1;
+	B->Height = Max(GetHeight(B->Left,A->Height)+1;	
+	return B;
+	
+}
+// 右左插入
+AVLTree DoubleRightLeftRotation(AVLTree A)
+{
+	// A的子树做一次右旋
+	A->Left = SingleRightRotation(A->Left);
+	// A做一次左旋
+	return SingleLeftRotation(A);
+	
+}
+
+
+// 左左插入-右旋
+AVLTree SingleRightRotation(AVLTree A)
+{
+	AVLTree B = A->Right;
+	A->Right = B->Left;
+	B->Left = A;
+	
+	A->Height = Max(GetHeigt(A->Left),GetHeight(A->Right))+1;
+	B->Height = Max(A->Height,GetHeight(B->Right))+1;
+	
+	
+	return B:
+		
+}
+
+// 左右插入
+
+AVLTree DoubleLeftRightRotation(AVLTree A)
+{
+	// A的子树左旋
+	A->Left = SingleLeftRotation(A->Left);
+	// A做一次右旋
+	return SingleRightRotation(A);
+
+}
+
+AVLTree Insert(AVLTree T,ElementType X)
+{	// 将X插入AVL树T中，并且返回调整后的树
+	if(!T)
+	{// 若空树，新建一个包含一个节点的树
+		T = (AVLTree)malloc(sizeof(stuct AVLNode));
+		T->Data = X;
+		T->Height = 0;
+		T->Left = T->Right = NULL;
+	}
+	else if(X<T->Data)
+	{
+		T->Left = Insert(T->Left,X);
+		if(GetHeight(T->Left)-GetHeight(T->Right)==2)
+			if(X<T->Left->Data)
+				T = SingleRightRotation(T);//左左插入
+			else
+				T = DoubleLeftRightRotation(T);//左右插入
+	}
+	else if(X>T->Data)
+	{
+		T->Right = Insert(T->Right,X);
+		if(GetHeight(T->Right)-GetHeight(T->Left)==2)
+			if(X>T->Right->Data)
+				T = SingleLeftRotation(T);//右右插入
+			else
+				T = DoubleRightLeftRotation(T);//右左插入
+	}
+	
+	// else X == T->Data无须插入
+	
+	T->Height = Max(GetHeight(T->Left), GetHeight(T->Right))+1;
+	
+}
+
+
