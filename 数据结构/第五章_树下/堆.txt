@@ -1,0 +1,116 @@
+typedef struct HNode *Heap;
+struct HNode{
+	ElementType *Data;
+	int Size;
+	int Capacity;	
+};
+typedef Heap MaxHeap;// 最大堆
+typedef Heap MinHeap;// 最小堆
+
+#define MAXDATA 1000
+
+MaxHeap CreateHeap(int MaxSize)
+{
+	MaxHeap H = (MaxHeap)malloc(sizeof(struct HNode));
+	H->Data = (ElementType *)malloc((MaxSize+1)*sizeof(ElementType));
+	H->Size = 0;
+	H->Capacity = MaxSize;
+	H->Data[0] = MAXDATA;// 定义“哨兵”需要的大于堆中所有值
+	
+	return H;
+}
+
+
+bool IsFull(MaxHeap H)
+{
+	return (H->Size==H->Capacity);
+}
+
+bool Insert(MaxHeap H,ElementType X)
+{
+	int i;
+	
+	if(IsFull(H))
+	{
+		printf("最大堆已满");
+		return false;
+	}
+	i = ++H->Size;/* i指向插入后堆中的最后一个元素的位置 */
+	for(;H->Data[i/2]<X;i/=2)
+		H->Data[i] = H->Data[i/2];
+	H->Data[i] = X;
+	
+	return true;
+}
+
+#define ERROR -1
+
+bool IsEmpty(MaxHeap H)
+{
+	return (H->Size==0)
+}
+
+ElementType DeleteMax(MaxHeap H)
+{// 从最大堆H中取出键值位最大的元素，并删除一个结点
+	int Parent，Child;
+	ElementType MaxItem,X;
+	if(IsEmpty(H))
+	{
+		printf("最大堆已为空");
+		return ERROR;
+		
+	}
+	MaxItem = H->Data[1];// 取出根节点存放最大值
+	// 用最大堆最后一个元素从根节点开始向上过滤下层节点
+	X = H->Data[H->Size--];
+	for(Parent=1;Parent*2<=H->Size;Parent=Child)
+	{
+		Child = Parent * 2;//左儿子 右儿子2i+1
+		// Child!=H->Size 代表一定有右儿子，才会有与右儿子的比较
+		if((Child!=H->Size)&&(H->Data[Child]<H->Data[Child+1]))
+			Child++;
+		if(X>=H->Data[Child])
+			break;
+		else
+			H->Data[Parent] = H->Data[Child];
+		
+	}
+	H->Data[Parent] = X;
+	
+	return MaxItem;
+	
+}
+
+
+//--------建造最大堆---------------
+void PercDown(MaxHeap H,int p)
+{
+	int Parent ,Child;
+	ElementType X;
+	
+	X = H->Data[p];
+	for(Parent=p;Parent*2<=H->Size;Parent=Child)
+	{
+		Child = Parent * 2;
+		if((Child!=H->Size)&&(H->Data[Child]<H->Data[Child+1]))
+			Child++;
+		if(X>=H->Data[Child])
+			break;
+		else
+			H->Data[Parent] = H->Data[Child];
+	}
+	H->Data[Parent] = X;
+}
+
+
+
+void BuildHeap(MaxHeap H)
+{
+	/* 调整H->Data[]中的元素，使满足最大堆的有序性  */
+  /* 这里假设所有H->Size个元素已经存在H->Data[]中 */
+	int i;
+	/* 从最后一个结点的父节点开始，到根结点1 */
+	for(i=H->Size/2;i>0;i--)
+		PerDown(H,i);
+	
+}
