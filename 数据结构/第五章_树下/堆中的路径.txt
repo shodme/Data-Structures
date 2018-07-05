@@ -1,0 +1,137 @@
+//题目链接[[website]](https://pintia.cn/problem-sets/951072707007700992/problems/980373149213519872)
+// 我的思路：直接将数字顺序存入，然后重新建立最小堆，然后再查找输出（与正确的直接一个一个插入方法相比，输出顺序可能不太相同）
+
+
+#include <iostream>
+using namespace std;
+
+#define MINDATA -10000
+
+
+typedef struct HNode *Heap;
+struct HNode{
+	int *Data;
+	int Size;//目前容量
+	int Capacity;//最大容量
+};
+
+Heap CreateHeap(int MaxSize);
+Heap read(int *Ins_num, int *path_num, int **T);
+Heap HeapPath(Heap H, int *Ins_num, int *path_num);
+void PercDown(Heap H, int p);
+void BuildHeap(Heap H);
+void Print(Heap H, int num);
+
+int main()
+{
+	Heap H, H1;
+	//int *Ins_num = NULL;
+//	int *path_num = NULL;
+	int *Ins_num = (int*)malloc(sizeof(int));
+	int *path_num = (int*)malloc(sizeof(int));
+	int *T = NULL;
+	H = read(Ins_num, path_num, &T);
+	for (int i = 0; i<*path_num; i++)
+	{
+		Print(H, T[i]);
+	}
+
+	free(Ins_num);
+	free(path_num);
+	free(T);
+	
+	return 0;
+}
+
+Heap CreateHeap(int *MaxSize)
+{
+	Heap H = (Heap)malloc(sizeof(struct HNode));
+	H->Data = (int*)malloc((*MaxSize + 1)*sizeof(int));
+	H->Size = 0;
+	H->Capacity = *MaxSize;
+
+	H->Data[0] = MINDATA;// 哨兵元素
+
+	return H;
+
+}
+
+
+Heap read(int *Ins_num, int *path_num, int **T)
+{
+	//int len;
+	cout << "输入需要插入元素的个数和输出路径个数：";
+	scanf("%d%d", Ins_num, path_num);
+
+	Heap H, H1;
+
+	H = CreateHeap(Ins_num);
+
+	cout << "输入元素：" << endl;
+	for (int i = 1; i<=*Ins_num; i++)
+	{
+		scanf("%d", &H->Data[i]);
+		H->Size++;
+	}
+
+	cout << "输入元素：" << endl;
+	*T = (int*)malloc(sizeof(int)*(*path_num));
+	for (int i = 0; i<*path_num; i++)
+	{
+		scanf("%d", (*T) + i);
+	}
+
+
+	BuildHeap(H);
+	return H;
+
+}
+
+
+//--------建造最小堆---------------
+void PercDown(Heap H, int p)
+{
+	int Parent, Child;
+	int X;
+	X = H->Data[p];
+
+	for (Parent = p; Parent * 2<H->Size; Parent = Child)
+	{
+		Child = Parent * 2;
+		if ((Child != H->Size) && (H->Data[Child]>H->Data[Child + 1]))
+			Child++;
+		if (X<H->Data[Child])
+			break;
+		else
+			H->Data[Parent] = H->Data[Child];
+	}
+	H->Data[Parent] = X;
+
+}
+
+
+
+void BuildHeap(Heap H)
+{
+	/* 调整H->Data[]中的元素，使满足最小堆的有序性  */
+	/* 这里假设所有H->Size个元素已经存在H->Data[]中 */
+	int i;
+	/* 从最后一个结点的父节点开始，到根结点1 */
+	for (i = H->Size / 2; i>0; i--)
+		PercDown(H, i);
+
+}
+
+
+
+void Print(Heap H, int num)
+{
+	while (num != 0)
+	{
+		cout << H->Data[num]<<" ";
+		num = num / 2;
+	}
+
+	cout << endl;
+
+}
